@@ -10,7 +10,7 @@ namespace Company.Common.DTOs
     public record CompanyDTO
     {
         public int Id { get; set; }
-        [MaxLength(25), Required] public string? Name { get; set; }
-        [MaxLength(15), Required] public string? OrganisationNumber { get; set; }
+        public string? Name { get; set; }
+        public string? OrganisationNumber { get; set; }
     }
 }

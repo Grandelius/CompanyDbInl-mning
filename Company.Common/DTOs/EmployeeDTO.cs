@@ -10,10 +10,10 @@ namespace Company.Common.DTOs
     public record EmployeeDTO
     {
         public int Id { get; set; }
-        [MaxLength(25), Required] public string? FirstName { get; set; }
-        [MaxLength(25), Required] public string? LastName { get; set; }
-        [Required] public decimal Salary { get; set; }
-        [Required] public bool IsUnionMember { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public decimal Salary { get; set; }
+        public bool IsUnionMember { get; set; }
         public int DepartmentId { get; set; }
     }
 }
