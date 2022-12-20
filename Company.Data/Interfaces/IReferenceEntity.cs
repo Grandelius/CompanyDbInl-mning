@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Company.Data.Interfaces
 {
-    internal interface IReferenceEntity
+    public interface IReferenceEntity
     {
     }
 }

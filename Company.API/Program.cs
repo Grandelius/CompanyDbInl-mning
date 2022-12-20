@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<CompanyContext>(
  options =>
  options.UseSqlServer(
- builder.Configuration.GetConnectionString("CourseConnection")));
+ builder.Configuration.GetConnectionString("CompanyConnection")));
 
 ConfigureAutoMapper(builder.Services);
 RegisterServices(builder.Services);

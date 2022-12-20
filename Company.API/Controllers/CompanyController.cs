@@ -16,72 +16,30 @@ namespace Company.API.Controllers
         // GET: api/<CompanyController>
         [HttpGet]
         public async Task<IResult> Get() =>
-            Results.Ok(await _db.GetAsync<_Company, CompanyDTO>());
+            Results.Ok(await _db.HttpGetAsync<_Company, CompanyDTO>());
 
         // GET api/<CompanyController>/5
         [HttpGet("{id}")]
-        public async Task<IResult> Get(int id)
-        {
-            var result = await _db.SingleAsync<_Company, CompanyDTO>(e =>
-            e.Id.Equals(id));
-
-            if (result == null) return Results.NotFound();
-            return Results.Ok(result);
-        }
+        public async Task<IResult> Get(int id) =>
+            await _db.HttpSingleAsync<_Company, CompanyDTO>(id);
+       
             
         // POST api/<CompanyController>
         [HttpPost]
-        public async Task<IResult> Post([FromBody] CompanyDTO dto)
-        {
-            try
-            {
-                var entity = await _db.AddAsync<_Company, CompanyDTO>(dto);
-                if (await _db.SaveChangesAsync()) 
-                {
-                    var node = typeof(_Company).Name.ToLower();
-                    return Results.Created($"/{node}s/{entity.Id}", entity);
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest($"Couldn't add the {typeof (_Company).Name} entity.\n{ex}.");
-            }
-            return Results.BadRequest($"Couldn't add the {typeof(_Company).Name} entity.");
-        }
+        public async Task<IResult> Post([FromBody] CompanyDTO dto) =>
+            await _db.HttpPostAsync<_Company, CompanyDTO>(dto);
+       
 
         // PUT api/<CompanyController>/5
         [HttpPut("{id}")]
-        public async Task<IResult> Put(int id, [FromBody] CompanyDTO dto)
-        {
-            try
-            {
-                if (!await _db.AnyAsync<_Company>(e => e.Id.Equals(id))) return Results.NotFound();
-                _db.Update<_Company, CompanyDTO>(id, dto);
-                if (await _db.SaveChangesAsync()) return Results.NoContent();
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest($"Couldn't update the {typeof(_Company).Name} entity.\n{ex}");
-            }
-            return Results.BadRequest($"Couldn't update the {typeof(_Company).Name} entity.");
-        }
+        public async Task<IResult> Put(int id, [FromBody] CompanyDTO dto) =>
+            await _db.HttpPutAsync<_Company, CompanyDTO>(id, dto);
+
 
         // DELETE api/<CompanyController>/5
         [HttpDelete("{id}")]
-        public async Task<IResult> Delete(int id)
-        {
-            try
-            {
-                if (!await _db.DeleteAsync<_Company>(id)) return Results.NotFound();
-                if (await _db.SaveChangesAsync()) return Results.NoContent();
-
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest($"Couldn't delete the {typeof(_Company).Name}entity.\n{ ex}.");
-            }
-            return Results.BadRequest($"Couldn't delete the {typeof(_Company).Name}entity.");
-        }
+        public async Task<IResult> Delete(int id) =>
+            await _db.HttpDeleteAsync<_Company>(id);
+ 
     }
 }

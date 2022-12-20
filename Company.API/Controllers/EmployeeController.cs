@@ -14,71 +14,29 @@ namespace Company.API.Controllers
         // GET: api/<EmployeeController>
         [HttpGet]
         public async Task<IResult> Get() =>
-            Results.Ok(await _db.GetAsync<Employee, EmployeeDTO>());
+           await _db.HttpGetAsync<Employee, EmployeeDTO>();
 
         // GET api/<EmployeeController>/5
         [HttpGet("{id}")]
-        public async Task<IResult> Get(int id)
-        {
-            var result = await _db.SingleAsync<Employee, EmployeeDTO>(e =>
-            e.Id.Equals(id));
+        public async Task<IResult> Get(int id) =>
+            await _db.HttpSingleAsync<Employee, EmployeeDTO>(id);
 
-            if (result == null) return Results.NotFound();
-            return Results.Ok(result);
-        }
         // POST api/<EmployeeController>
         [HttpPost]
-        public async Task<IResult> Post([FromBody] EmployeeDTO dto)
-        {
-            try
-            {
-                var entity = await _db.AddAsync<Employee, EmployeeDTO>(dto);
-                if (await _db.SaveChangesAsync())
-                {
-                    var node = typeof(Employee).Name.ToLower();
-                    return Results.Created($"/{node}s/{entity.Id}", entity);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest($"Couldn't add the {typeof(Employee).Name} entity.\n{ex}.");
-            }
-            return Results.BadRequest($"Couldn't add the {typeof(Employee).Name} entity.");
-        }
+        public async Task<IResult> Post([FromBody] EmployeeDTO dto) => 
+            await _db.HttpPostAsync<Employee, EmployeeDTO>(dto);
+
 
         // PUT api/<EmployeeController>/5
         [HttpPut("{id}")]
-            public async Task<IResult> Put(int id, [FromBody] EmployeeDTO dto)
-            {
-                try
-                {
-                    if (!await _db.AnyAsync<Employee>(e => e.Id.Equals(id))) return Results.NotFound();
-                    _db.Update<Employee, EmployeeDTO>(id, dto);
-                    if (await _db.SaveChangesAsync()) return Results.NoContent();
-                }
-                catch (Exception ex)
-                {
-                    return Results.BadRequest($"Couldn't update the {typeof(Employee).Name} entity.\n{ex}");
-                }
-                return Results.BadRequest($"Couldn't update the {typeof(Employee).Name} entity.");
-            }
-        
+        public async Task<IResult> Put(int id, [FromBody] EmployeeDTO dto) =>
+            await _db.HttpPutAsync<Employee, EmployeeDTO>(id, dto);
+
 
         // DELETE api/<EmployeeController>/5
         [HttpDelete("{id}")]
-        public async Task<IResult> Delete(int id)
-        {
-            try
-            {
-                if (!await _db.DeleteAsync<Employee>(id)) return Results.NotFound();
-                if (await _db.SaveChangesAsync()) return Results.NoContent();
+        public async Task<IResult> Delete(int id) =>
+            await _db.HttpDeleteAsync<Employee>(id);
 
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest($"Couldn't delete the {typeof(Employee).Name}entity.\n{ex}.");
-            }
-            return Results.BadRequest($"Couldn't delete the {typeof(Employee).Name}entity.");
-        }
     }
 }

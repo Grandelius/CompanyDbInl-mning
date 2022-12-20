@@ -14,73 +14,31 @@ namespace Company.API.Controllers
         // GET: api/<DepartmentController>
         [HttpGet]
         public async Task<IResult> Get() =>
-            Results.Ok(await _db.GetAsync<Department, DepartmentDTO>()); 
+            await _db.HttpGetAsync<Department, DepartmentDTO>();
 
         // GET api/<DepartmentController>/5
         [HttpGet("{id}")]
-        public async Task<IResult> Get(int id)
-        {
-            var result = await _db.SingleAsync<Department, DepartmentDTO>(e =>
-            e.Id.Equals(id));
+        public async Task<IResult> Get(int id) =>
+            await _db.HttpSingleAsync<Department, DepartmentDTO>(id);
 
-            if (result == null) return Results.NotFound();
-            return Results.Ok(result);
-        }
 
         // POST api/<DepartmentController>
         [HttpPost]
-        public async Task<IResult> Post([FromBody] DepartmentDTO dto)
-        {
-            try
-            {
-                var entity = await _db.AddAsync<Department, DepartmentDTO>(dto);
-                if (await _db.SaveChangesAsync())
-                {
-                    var node = typeof(Department).Name.ToLower();
-                    return Results.Created($"/{node}s/{entity.Id}", entity);
-                }
+        public async Task<IResult> Post([FromBody] DepartmentDTO dto) =>
+            await _db.HttpPostAsync<Department, DepartmentDTO>(dto);
 
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest($"Couldn't add the {typeof(Department).Name} entity.\n{ex}.");
-            }
-            return Results.BadRequest($"Couldn't add the {typeof(Department).Name} entity.");
-        }
 
         // PUT api/<DepartmentController>/5
         [HttpPut("{id}")]
-        public async Task<IResult> Put(int id, [FromBody] DepartmentDTO dto)
-        {
-            try
-            {
-                if (!await _db.AnyAsync<Department>(e => e.Id.Equals(id))) return Results.NotFound();
-                _db.Update<Department, DepartmentDTO>(id, dto);
-                if (await _db.SaveChangesAsync()) return Results.NoContent();
-            }
-            catch (Exception ex)
-            {
-                return Results.BadRequest($"Couldn't update the {typeof(Department).Name} entity.\n{ex}");
-            }
-            return Results.BadRequest($"Couldn't update the {typeof(Department).Name} entity.");
-        }
+        public async Task<IResult> Put(int id, [FromBody] DepartmentDTO dto) =>
+            await _db.HttpPutAsync<Department, DepartmentDTO>(id, dto);
+
 
         // DELETE api/<DepartmentController>/5
         [HttpDelete("{id}")]
-            public async Task<IResult> Delete(int id)
-            {
-                try
-                {
-                    if (!await _db.DeleteAsync<Department>(id)) return Results.NotFound();
-                    if (await _db.SaveChangesAsync()) return Results.NoContent();
-
-                }
-                catch (Exception ex)
-                {
-                    return Results.BadRequest($"Couldn't delete the {typeof(Department).Name}entity.\n{ex}.");
-                }
-                return Results.BadRequest($"Couldn't delete the {typeof(Department).Name}entity.");
-            }
+        public async Task<IResult> Delete(int id) =>
+            await _db.HttpDeleteAsync<Department>(id);
+          
         
     }
 }
